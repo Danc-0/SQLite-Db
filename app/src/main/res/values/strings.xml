@@ -6,4 +6,6 @@
     <string name="surname">SurName</string>
     <string name="add_data">Add Data</string>
     <string name="view_data">View Data</string>
+    <string name="id_number">ID Number</string>
+    <string name="save_details">Save Details</string>
 </resources>

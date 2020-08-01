@@ -3,10 +3,10 @@ package com.danc.sqlitegettingstarted;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.provider.BaseColumns;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -16,13 +16,13 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.danc.sqlitegettingstarted.FeedReaderContract.*;
-import static com.danc.sqlitegettingstarted.FeedReaderContract.FeedEntry.TABLE_NAME;
+import static com.danc.sqlitegettingstarted.StudentDetailsContract.*;
+import static com.danc.sqlitegettingstarted.StudentDetailsContract.DetailsEntry.TABLE_NAME;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
-    FeedReaderDbHelper dbHelper;
+    StudentDetailsDbHelper dbHelper;
     SQLiteDatabase db;
 
     EditText name, surname, marks;
@@ -42,29 +42,30 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 insertData();
+                moveToParent();
             }
         });
 
-        viewData.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Cursor res = ViewAllData();
-
-                if (res.getCount() == 0){
-                    //Show message
-                    return;
-                } else {
-                    StringBuffer buffer = new StringBuffer();
-                    while (res.moveToNext()) {
-                        buffer.append("_ID: " + res.getString(0) + "\n");
-                        buffer.append("Name: " + res.getString(1) + "\n");
-                        buffer.append("Surname: " + res.getString(2) + "\n");
-                        buffer.append("Marks: " + res.getString(3) + "\n");
-                    }
-                }
-            }
-        });
-
+//        viewData.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Cursor res = ViewAllData();
+//
+//                if (res.getCount() == 0){
+//                    //Show message
+//                    return;
+//                } else {
+//                    StringBuffer buffer = new StringBuffer();
+//                    while (res.moveToNext()) {
+//                        buffer.append("_ID: " + res.getString(0) + "\n");
+//                        buffer.append("Name: " + res.getString(1) + "\n");
+//                        buffer.append("Surname: " + res.getString(2) + "\n");
+//                        buffer.append("Marks: " + res.getString(3) + "\n");
+//                    }
+//                }
+//            }
+//        });
+//
     }
 
     public boolean insertData() {
@@ -72,16 +73,16 @@ public class MainActivity extends AppCompatActivity {
         String surName1 = surname.getText().toString();
         String totalMarks = marks.getText().toString();
 
-        dbHelper = new FeedReaderDbHelper(this);
+        dbHelper = new StudentDetailsDbHelper(this);
 
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(FeedEntry.COLUMN_NAME, firstName);
-        values.put(FeedEntry.COLUMN_SURNAME, surName1);
-        values.put(FeedEntry.COLUMN_MARKS, totalMarks);
+        values.put(DetailsEntry.COLUMN_NAME, firstName);
+        values.put(DetailsEntry.COLUMN_SURNAME, surName1);
+        values.put(DetailsEntry.COLUMN_MARKS, totalMarks);
 
         long newRowID = db.insert(TABLE_NAME, null, values);
-        db = dbHelper.getReadableDatabase();
+//        db = dbHelper.getReadableDatabase();
 
         if (newRowID == -1) {
             Log.d(TAG, "insertData: Row Id" + newRowID);
@@ -110,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
         List<Long> itemIds = new ArrayList<Long>();
         while (cursor.moveToNext()){
             long itemId = cursor.getLong(
-                    cursor.getColumnIndexOrThrow(FeedEntry._ID)
+                    cursor.getColumnIndexOrThrow(DetailsEntry._ID)
             );
             itemIds.add(itemId);
             cursor.close();
@@ -121,5 +122,9 @@ public class MainActivity extends AppCompatActivity {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         return cursor = db.rawQuery("SELECT * FROM " + TABLE_NAME, null);
 
+    }
+
+    public void moveToParent() {
+        startActivity(new Intent(this, ParentsActivity.class));
     }
 }
