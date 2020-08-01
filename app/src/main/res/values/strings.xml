@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">SQLite Db</string>
+    <string name="sqlite_getting_started">SQLite Getting Started</string>
+    <string name="first_name">First Name</string>
+    <string name="marks">Marks</string>
+    <string name="surname">SurName</string>
+    <string name="add_data">Add Data</string>
+    <string name="view_data">View Data</string>
+</resources>
